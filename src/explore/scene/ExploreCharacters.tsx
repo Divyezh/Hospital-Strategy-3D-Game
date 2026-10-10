@@ -25,7 +25,7 @@ interface ExploreCharactersProps {
 export function ExploreCharacters({ onGateTrigger }: ExploreCharactersProps) {
   // Visitor moving reference
   const visitorRef = useRef<THREE.Group>(null);
-  const visitorZ = useRef(72);
+  const visitorZ = useRef(68);
   const visitorWalkPhaseRef = useRef(0);
 
   // Dedicated Ambulance controller reference (Step 1)
@@ -66,8 +66,8 @@ export function ExploreCharacters({ onGateTrigger }: ExploreCharactersProps) {
   const pedestriansRef = useRef<ExplorePedestrianState[]>([
     {
       id: 'VIS-01',
-      position: [-6.8, 0.15, 70],
-      speed: 3.2,
+      position: [6.8, 0.15, 68],
+      speed: 3.0,
       maxSpeed: 4.0,
     },
   ]);
@@ -90,13 +90,15 @@ export function ExploreCharacters({ onGateTrigger }: ExploreCharactersProps) {
     frameCountRef.current++;
 
     // 1. Visitor Movement Loop:
-    visitorZ.current -= delta * 3.2;
-    if (visitorZ.current < 16) {
-      visitorZ.current = 70; // loop back
+    let wrapped = false;
+    visitorZ.current -= delta * 3.0;
+    if (visitorZ.current < 18) {
+      visitorZ.current = 68; // loop back
+      wrapped = true;
     }
     if (visitorRef.current) {
       visitorRef.current.position.z = visitorZ.current;
-      visitorRef.current.position.x = -6.8; // on the pedestrian sidewalk
+      visitorRef.current.position.x = 6.8; // on the designated east pedestrian promenade
       visitorRef.current.position.y = 0.15;
     }
     visitorWalkPhaseRef.current = time * 8;
@@ -129,10 +131,14 @@ export function ExploreCharacters({ onGateTrigger }: ExploreCharactersProps) {
 
     const ped = pedestriansRef.current[0];
     if (ped) {
-      ped.prevPosition = ped.position ? [...ped.position] : [-6.8, 0.15, visitorZ.current];
-      ped.position = [-6.8, 0.15, visitorZ.current];
+      if (wrapped) {
+        ped.prevPosition = undefined;
+      } else {
+        ped.prevPosition = ped.position ? [...ped.position] : [6.8, 0.15, visitorZ.current];
+      }
+      ped.position = [6.8, 0.15, visitorZ.current];
       ped.lastDt = delta;
-      ped.speed = 3.2;
+      ped.speed = 3.0;
     }
 
     // 3. Automated Gate Proximity Detection:

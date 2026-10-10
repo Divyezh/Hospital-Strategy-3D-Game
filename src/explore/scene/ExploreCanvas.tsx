@@ -44,7 +44,7 @@ export function ExploreCanvas() {
           toneMappingExposure: 1.05,
         }}
         onCreated={({ gl }) => {
-          gl.shadowMap.type = THREE.PCFSoftShadowMap;
+          gl.shadowMap.type = THREE.PCFShadowMap;
         }}
       >
         <Suspense fallback={null}>
