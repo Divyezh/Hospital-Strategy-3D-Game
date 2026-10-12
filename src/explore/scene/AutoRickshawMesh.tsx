@@ -9,6 +9,7 @@ interface AutoRickshawMeshProps {
   steerAngle?: number;
   hasDriver?: boolean;
   hasPassenger?: boolean;
+  passengerShirtColor?: string;
 }
 
 export function AutoRickshawMesh({
@@ -17,6 +18,7 @@ export function AutoRickshawMesh({
   steerAngle = 0,
   hasDriver = true,
   hasPassenger = false,
+  passengerShirtColor = '#2563EB',
 }: AutoRickshawMeshProps) {
   const lowerBodyColor = colorScheme === 'green_yellow' ? '#15803D' : '#1E293B';
   const canopyColor = '#FBBF24'; // Iconic auto-rickshaw yellow
@@ -235,7 +237,7 @@ export function AutoRickshawMesh({
           </mesh>
           <mesh position={[0, 0.42, 0]} castShadow>
             <boxGeometry args={[0.34, 0.42, 0.2]} />
-            <meshStandardMaterial color="#2563EB" />
+            <meshStandardMaterial color={passengerShirtColor} />
           </mesh>
         </group>
       )}

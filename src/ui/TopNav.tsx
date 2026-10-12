@@ -70,10 +70,10 @@ export function TopNav() {
           </div>
           <div className="flex flex-col text-left">
             <span className="font-extrabold text-slate-900 text-base tracking-tight leading-tight">
-              MediCity
+              MediTrack
             </span>
             <span className="text-[10px] text-blue-600 font-semibold tracking-wider uppercase">
-              Control Room
+              Hospital Logistics & Care
             </span>
           </div>
         </div>

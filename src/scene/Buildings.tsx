@@ -1,9 +1,12 @@
-'use client';
+ 'use client';
 
 import React from 'react';
 import * as THREE from 'three';
 import { CONFIG } from '@/data/config';
 import { ToyTree, ToyBench } from './Campus';
+import { HospitalDockBays } from './HospitalDockBays';
+import { EvChargingStation } from './EvChargingStation';
+import { MedicalStagingYard } from './MedicalStagingYard';
 
 // Reusable hospital window grid
 function WindowGrid({
@@ -575,28 +578,14 @@ export function SiteMC04({ center }: { center: [number, number, number] }) {
         ))}
       </group>
 
-      {/* 6 AMBULANCE BAYS ALONG ONE LONG WALL (Z = 4.1) per spec */}
-      <group position={[0, 0, 4.1]}>
-        {[-13.5, -8.1, -2.7, 2.7, 8.1, 13.5].map((bx, i) => (
-          <group key={i} position={[bx, 0, 0]}>
-            {/* Bay frame in royal blue */}
-            <mesh position={[0, 2.2, 0.15]} castShadow>
-              <boxGeometry args={[4.2, 4.2, 0.3]} />
-              <meshStandardMaterial color={CONFIG.colors.buildingTrim} />
-            </mesh>
-            {/* Shutter door */}
-            <mesh position={[0, 1.9, 0.3]}>
-              <boxGeometry args={[3.6, 3.6, 0.05]} />
-              <meshStandardMaterial color="#334155" roughness={0.5} />
-            </mesh>
-            {/* Bay slot number badge */}
-            <mesh position={[0, 4.4, 0.35]}>
-              <boxGeometry args={[1.2, 0.45, 0.1]} />
-              <meshStandardMaterial color="#2563EB" />
-            </mesh>
-          </group>
-        ))}
-      </group>
+      {/* HIGH-TECH FUNCTIONAL DOCK BAYS WITH ANIMATED SHUTTER DOORS & LEVELERS */}
+      <HospitalDockBays center={[0, 0, 0]} />
+
+      {/* EV CHARGING PEDESTALS (C1 & C2) */}
+      <EvChargingStation position={[19, 0, 3.5]} rotation={-Math.PI / 2} />
+
+      {/* MEDICAL PALLET STAGING YARD */}
+      <MedicalStagingYard />
 
       {/* Continuous Ambulance Portico Canopy along all 6 bays */}
       <mesh position={[0, 4.6, 7.5]} castShadow>

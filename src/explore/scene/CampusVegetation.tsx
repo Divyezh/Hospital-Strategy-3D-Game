@@ -6,6 +6,7 @@ import { useFrame } from '@react-three/fiber';
 import { EXPLORE_TOKENS } from '@/explore/tokens';
 import { generateCampusTrees, generateCampusStreetlights, generateCampusBenches } from '@/data/campus';
 import { useExploreStore } from '@/explore/store';
+import { StreetLight } from './StreetLight';
 
 export function CampusVegetation() {
   const timeOfDay = useExploreStore((s) => s.timeOfDay);
@@ -169,39 +170,16 @@ export function CampusVegetation() {
         ))}
       </group>
 
-      {/* 4. Streetlights with dynamic night illumination */}
+      {/* 4. Streetlights with dynamic night illumination & road glow */}
       {streetlights.map((l, idx) => (
-        <group key={`lamp-${idx}`} position={[l.x, 0, l.z]} rotation={[0, l.rotation, 0]}>
-          {/* Post pole */}
-          <mesh position={[0, l.height / 2, 0]} castShadow>
-            <cylinderGeometry args={[0.07, 0.12, l.height, 8]} />
-            <meshStandardMaterial color={EXPLORE_TOKENS.colors.metalDark} metalness={0.85} roughness={0.25} />
-          </mesh>
-          {/* Curved Arm */}
-          <mesh position={[0.4, l.height - 0.1, 0]} rotation={[0, 0, -Math.PI / 4]} castShadow>
-            <cylinderGeometry args={[0.05, 0.05, 0.9, 6]} />
-            <meshStandardMaterial color={EXPLORE_TOKENS.colors.metalDark} metalness={0.85} />
-          </mesh>
-          {/* Lantern Head */}
-          <mesh position={[0.7, l.height - 0.35, 0]}>
-            <boxGeometry args={[0.4, 0.16, 0.3]} />
-            <meshStandardMaterial
-              color={isNight ? '#FFEAA7' : '#9AA0A6'}
-              emissive={isNight ? '#FFD27D' : '#000000'}
-              emissiveIntensity={isNight ? 2.5 : 0}
-            />
-          </mesh>
-          {/* Night Pointlight cone */}
-          {isNight && (
-            <pointLight
-              position={[0.7, l.height - 0.4, 0]}
-              color="#FFE194"
-              intensity={1.8}
-              distance={18}
-              decay={2}
-            />
-          )}
-        </group>
+        <StreetLight
+          key={`lamp-${idx}`}
+          position={[l.x, 0, l.z]}
+          rotationY={l.rotation}
+          height={l.height || 5.2}
+          armReach={1.8}
+          glowRadius={5.5}
+        />
       ))}
 
       {/* 5. Campus Wooden Benches */}

@@ -5,6 +5,9 @@ import * as THREE from 'three';
 import { EXPLORE_TOKENS } from '@/explore/tokens';
 import { getAsphaltTexture, getConcreteTexture, getPavingTexture, getGrassTexture } from '@/explore/textures';
 import { CAMPUS_LAYOUT } from '@/data/campus';
+import { SportsCarMesh } from './SportsCarMesh';
+import { SuvCarMesh } from './SuvCarMesh';
+import { SedanCarMesh } from './SedanCarMesh';
 
 export function CampusGround() {
   const asphaltTex = useMemo(() => getAsphaltTexture(), []);
@@ -239,6 +242,19 @@ export function CampusGround() {
             <boxGeometry args={[32, 0.15, 7.5]} />
             <meshStandardMaterial color="#2B3E50" metalness={0.85} roughness={0.2} />
           </mesh>
+          {/* Parked Cars in Bay Row 1 */}
+          <group position={[-9, 0, 0]}>
+            <SportsCarMesh color="#F59E0B" hasSpoiler={true} headlightsOn={false} />
+          </group>
+          <group position={[-3, 0, 0]}>
+            <SedanCarMesh color="#F8FAFC" headlightsOn={false} />
+          </group>
+          <group position={[3, 0, 0]}>
+            <SuvCarMesh color="#1E3A8A" headlightsOn={false} />
+          </group>
+          <group position={[9, 0, 0]}>
+            <SedanCarMesh color="#831843" headlightsOn={false} />
+          </group>
         </group>
         {/* Solar Canopy 2 */}
         <group position={[0, 0, 6]}>
@@ -254,6 +270,19 @@ export function CampusGround() {
             <boxGeometry args={[32, 0.15, 7.5]} />
             <meshStandardMaterial color="#2B3E50" metalness={0.85} roughness={0.2} />
           </mesh>
+          {/* Parked Cars in Bay Row 2 */}
+          <group position={[-9, 0, 0]} rotation={[0, Math.PI, 0]}>
+            <SportsCarMesh color="#DC2626" hasSpoiler={true} headlightsOn={false} />
+          </group>
+          <group position={[-3, 0, 0]} rotation={[0, Math.PI, 0]}>
+            <SuvCarMesh color="#065F46" headlightsOn={false} />
+          </group>
+          <group position={[3, 0, 0]} rotation={[0, Math.PI, 0]}>
+            <SedanCarMesh color="#1E293B" headlightsOn={false} />
+          </group>
+          <group position={[9, 0, 0]} rotation={[0, Math.PI, 0]}>
+            <SuvCarMesh color="#D97706" headlightsOn={false} />
+          </group>
         </group>
       </group>
 

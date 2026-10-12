@@ -10,6 +10,7 @@ interface CityBusMeshProps {
   wheelRotation?: number;
   doorsOpen?: boolean;
   colorTheme?: 'teal_white' | 'blue_white';
+  hasPassengers?: boolean;
 }
 
 export function CityBusMesh({
@@ -18,6 +19,7 @@ export function CityBusMesh({
   wheelRotation = 0,
   doorsOpen = false,
   colorTheme = 'teal_white',
+  hasPassengers = false,
 }: CityBusMeshProps) {
   const primaryColor = colorTheme === 'teal_white' ? '#0D9488' : '#2563EB'; // Teal or Blue
   const secondaryColor = '#FFFFFF';
@@ -191,6 +193,56 @@ export function CityBusMesh({
           <meshStandardMaterial color="#0F172A" />
         </mesh>
       </group>
+
+      {/* 7B. Seated Passengers visible through Panoramic Windows */}
+      {hasPassengers && (
+        <group position={[0, 1.5, 0]}>
+          {/* Passenger 1 (Right Front Window) */}
+          <group position={[0.85, 0.25, 2.2]}>
+            <mesh position={[0, 0.32, 0]} castShadow>
+              <sphereGeometry args={[0.14, 8, 8]} />
+              <meshStandardMaterial color="#E0AC69" />
+            </mesh>
+            <mesh position={[0, 0.04, 0]} castShadow>
+              <boxGeometry args={[0.36, 0.38, 0.22]} />
+              <meshStandardMaterial color="#DC2626" />
+            </mesh>
+          </group>
+          {/* Passenger 2 (Right Middle Window) */}
+          <group position={[0.85, 0.25, 0.6]}>
+            <mesh position={[0, 0.32, 0]} castShadow>
+              <sphereGeometry args={[0.14, 8, 8]} />
+              <meshStandardMaterial color="#E0AC69" />
+            </mesh>
+            <mesh position={[0, 0.04, 0]} castShadow>
+              <boxGeometry args={[0.36, 0.38, 0.22]} />
+              <meshStandardMaterial color="#2563EB" />
+            </mesh>
+          </group>
+          {/* Passenger 3 (Left Front Window) */}
+          <group position={[-0.85, 0.25, 1.8]}>
+            <mesh position={[0, 0.32, 0]} castShadow>
+              <sphereGeometry args={[0.14, 8, 8]} />
+              <meshStandardMaterial color="#E0AC69" />
+            </mesh>
+            <mesh position={[0, 0.04, 0]} castShadow>
+              <boxGeometry args={[0.36, 0.38, 0.22]} />
+              <meshStandardMaterial color="#16A34A" />
+            </mesh>
+          </group>
+          {/* Passenger 4 (Left Rear Window) */}
+          <group position={[-0.85, 0.25, -2.0]}>
+            <mesh position={[0, 0.32, 0]} castShadow>
+              <sphereGeometry args={[0.14, 8, 8]} />
+              <meshStandardMaterial color="#E0AC69" />
+            </mesh>
+            <mesh position={[0, 0.04, 0]} castShadow>
+              <boxGeometry args={[0.36, 0.38, 0.22]} />
+              <meshStandardMaterial color="#D97706" />
+            </mesh>
+          </group>
+        </group>
+      )}
 
       {/* 8. Bus Wheels (Front Axle & Rear Dual Axle) */}
       {/* Front Left Wheel */}

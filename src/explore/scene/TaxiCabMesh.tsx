@@ -7,12 +7,16 @@ import * as THREE from 'three';
 interface TaxiCabMeshProps {
   wheelRotation?: number;
   hasDriver?: boolean;
+  hasPassenger?: boolean;
+  passengerShirtColor?: string;
   trunkOpen?: boolean;
 }
 
 export function TaxiCabMesh({
   wheelRotation = 0,
   hasDriver = true,
+  hasPassenger = false,
+  passengerShirtColor = '#0D9488',
   trunkOpen = false,
 }: TaxiCabMeshProps) {
   return (
@@ -108,6 +112,22 @@ export function TaxiCabMesh({
           <mesh position={[0, 0.08, 0]}>
             <boxGeometry args={[0.32, 0.35, 0.18]} />
             <meshStandardMaterial color="#1E293B" />
+          </mesh>
+        </group>
+      )}
+
+      {/* 5B. Passenger (Rear Right Seat) */}
+      {hasPassenger && (
+        <group position={[0.42, 0.95, -0.45]}>
+          {/* Passenger head */}
+          <mesh position={[0, 0.34, 0]} castShadow>
+            <sphereGeometry args={[0.13, 8, 8]} />
+            <meshStandardMaterial color="#E0AC69" />
+          </mesh>
+          {/* Passenger torso */}
+          <mesh position={[0, 0.07, 0]} castShadow>
+            <boxGeometry args={[0.32, 0.34, 0.18]} />
+            <meshStandardMaterial color={passengerShirtColor} />
           </mesh>
         </group>
       )}

@@ -199,7 +199,7 @@ export function ExploreControls() {
         className={`absolute top-16 sm:top-20 left-3 sm:left-4 z-30 w-[calc(100vw-24px)] xs:w-[calc(100vw-32px)] sm:w-84 max-h-[calc(100vh-140px)] sm:max-h-[calc(100vh-160px)] flex flex-col bg-white/95 backdrop-blur-2xl p-4 rounded-3xl border border-white/85 shadow-2xl pointer-events-auto overflow-hidden transition-all duration-300 ease-out transform ${
           sidebarOpen
             ? 'translate-x-0 opacity-100 scale-100'
-            : '-translate-x-[120%] opacity-0 scale-95 pointer-events-none'
+            : 'translate-x-[-120%] opacity-0 scale-95 pointer-events-none'
         }`}
       >
         {/* Card Header with Close Button */}

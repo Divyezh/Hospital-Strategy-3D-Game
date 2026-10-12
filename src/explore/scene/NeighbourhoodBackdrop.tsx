@@ -4,6 +4,10 @@ import React, { useRef } from 'react';
 import * as THREE from 'three';
 import { useFrame } from '@react-three/fiber';
 import { CAMPUS_LAYOUT } from '@/data/campus';
+import { SportsCarMesh } from './SportsCarMesh';
+import { SuvCarMesh } from './SuvCarMesh';
+import { SedanCarMesh } from './SedanCarMesh';
+import { StreetLight } from './StreetLight';
 import { EXPLORE_TOKENS } from '@/explore/tokens';
 import { useExploreStore } from '@/explore/store';
 
@@ -79,58 +83,65 @@ export function NeighbourhoodBackdrop() {
         </group>
       ))}
 
-      {/* 2. Moving Ambient Vehicles along South Outer Avenue (Z: 68) */}
+      {/* 2. Moving Ambient Vehicles along South Outer Metropolitan Boulevard */}
       <group ref={carsRef}>
-        {/* Car 1: White sedan westbound */}
-        <group position={[-50, 0.6, 65.5]} userData={{ speed: 14, dir: 1 }}>
-          <mesh castShadow>
-            <boxGeometry args={[4.2, 1.2, 1.9]} />
-            <meshStandardMaterial color="#F8FAFC" roughness={0.3} metalness={0.7} />
-          </mesh>
-          <mesh position={[0.2, 0.9, 0]}>
-            <boxGeometry args={[2.2, 0.9, 1.75]} />
-            <meshStandardMaterial color="#1E293B" roughness={0.1} metalness={0.9} />
-          </mesh>
+        {/* Car 1: Luxury Pearl White Sedan (Eastbound on Z: 70.5) */}
+        <group position={[-50, 0.15, 70.5]} rotation={[0, Math.PI / 2, 0]} userData={{ speed: 14, dir: 1 }}>
+          <SedanCarMesh color="#F8FAFC" headlightsOn={true} />
         </group>
 
-        {/* Car 2: Navy SUV eastbound */}
-        <group position={[30, 0.7, 70.5]} userData={{ speed: 12, dir: -1 }}>
-          <mesh castShadow>
-            <boxGeometry args={[4.6, 1.4, 2.0]} />
-            <meshStandardMaterial color="#1E3A8A" roughness={0.3} metalness={0.6} />
-          </mesh>
-          <mesh position={[0, 1.1, 0]}>
-            <boxGeometry args={[2.8, 0.9, 1.85]} />
-            <meshStandardMaterial color="#1E293B" roughness={0.1} />
-          </mesh>
+        {/* Car 2: Deep Navy Luxury SUV (Westbound on Z: 78.5) */}
+        <group position={[30, 0.15, 78.5]} rotation={[0, -Math.PI / 2, 0]} userData={{ speed: 12, dir: -1 }}>
+          <SuvCarMesh color="#1E3A8A" headlightsOn={true} />
         </group>
 
-        {/* Car 3: Yellow taxi westbound */}
-        <group position={[10, 0.6, 65.5]} userData={{ speed: 15, dir: 1 }}>
-          <mesh castShadow>
-            <boxGeometry args={[4.1, 1.2, 1.9]} />
-            <meshStandardMaterial color="#F59E0B" roughness={0.3} metalness={0.5} />
-          </mesh>
-          <mesh position={[0.2, 0.9, 0]}>
-            <boxGeometry args={[2.1, 0.85, 1.75]} />
-            <meshStandardMaterial color="#1E293B" roughness={0.1} />
-          </mesh>
+        {/* Car 3: Rosso Red High-Performance Sports Car (Eastbound on Z: 70.5) */}
+        <group position={[-160, 0.15, 70.5]} rotation={[0, Math.PI / 2, 0]} userData={{ speed: 18, dir: 1 }}>
+          <SportsCarMesh color="#DC2626" hasSpoiler={true} headlightsOn={true} />
+        </group>
+
+        {/* Car 4: Sunset Orange Supercar (Westbound on Z: 78.5) */}
+        <group position={[140, 0.15, 78.5]} rotation={[0, -Math.PI / 2, 0]} userData={{ speed: 17, dir: -1 }}>
+          <SportsCarMesh color="#F59E0B" hasSpoiler={true} headlightsOn={true} />
+        </group>
+
+        {/* Car 5: Slate Gray Luxury SUV (Eastbound on Z: 70.5) */}
+        <group position={[70, 0.15, 70.5]} rotation={[0, Math.PI / 2, 0]} userData={{ speed: 13, dir: 1 }}>
+          <SuvCarMesh color="#334155" headlightsOn={true} />
+        </group>
+
+        {/* Car 6: Executive Graphite Sedan (Westbound on Z: 78.5) */}
+        <group position={[-80, 0.15, 78.5]} rotation={[0, -Math.PI / 2, 0]} userData={{ speed: 15, dir: -1 }}>
+          <SedanCarMesh color="#1E293B" headlightsOn={true} />
         </group>
       </group>
 
-      {/* 3. Outer City Power / Light Poles along South Avenue */}
-      {[-90, -50, -10, 30, 70].map((x) => (
-        <group key={`outer-pole-${x}`} position={[x, 0, 75]}>
-          <mesh position={[0, 5, 0]} castShadow>
-            <cylinderGeometry args={[0.1, 0.14, 10, 8]} />
-            <meshStandardMaterial color="#4A5568" metalness={0.8} />
-          </mesh>
-          <mesh position={[0, 9.8, 0]} rotation={[0, 0, Math.PI / 2]}>
-            <cylinderGeometry args={[0.06, 0.06, 2.8, 6]} />
-            <meshStandardMaterial color="#4A5568" metalness={0.8} />
-          </mesh>
-        </group>
-      ))}
+      {/* 3. Modern LED Architectural Streetlights along Metropolitan Boulevard */}
+      <group>
+        {/* South Curbside Streetlights (Illuminating Westbound Lanes) */}
+        {[-200, -150, -100, -50, 0, 50, 100, 150, 200].map((x) => (
+          <StreetLight
+            key={`south-light-${x}`}
+            position={[x, 0, 84]}
+            rotationY={-Math.PI / 2}
+            height={8.5}
+            armReach={3.2}
+            glowRadius={8.5}
+          />
+        ))}
+
+        {/* North Curbside Streetlights (Illuminating Eastbound Lanes) */}
+        {[-175, -125, -75, -25, 25, 75, 125, 175].map((x) => (
+          <StreetLight
+            key={`north-light-${x}`}
+            position={[x, 0, 62]}
+            rotationY={Math.PI / 2}
+            height={8.5}
+            armReach={3.2}
+            glowRadius={8.5}
+          />
+        ))}
+      </group>
     </group>
   );
 }

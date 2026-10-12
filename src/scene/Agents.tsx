@@ -7,6 +7,9 @@ import { simEngine } from '@/sim/engine';
 import { SimAmbulance, SimOrderly, SimPatient, SimSupplyVan, SimStaff, Acuity } from '@/sim/types';
 import { useSimStore } from '@/store/useSimStore';
 import { CONFIG } from '@/data/config';
+import { SmoothAmbulanceMesh, SmoothSupplyVanMesh } from './SmoothVehicles';
+import { ForkliftTugMesh, ForkliftTugData } from './ForkliftTugMesh';
+import { HighwayTraffic } from './HighwayTraffic';
 
 // 3D Selection Brackets (Translucent blue box with corner brackets per spec)
 function SelectionBrackets({ size = [3.0, 2.5, 5.8] }: { size?: [number, number, number] }) {
@@ -507,19 +510,125 @@ function PatientMesh({ patient }: { patient: SimPatient }) {
   );
 }
 
+// Autonomous Medical Forklift Tugs Driver
+function AutonomousForklifts() {
+  const tugRef = React.useRef({
+    pos: [34, 0, 48] as [number, number, number],
+    rot: 0,
+    fork: 0.8,
+    status: 'Unloading truck' as ForkliftTugData['status'],
+    carrying: 'Pallet #102: Nitrile Gloves',
+    isCarrying: true,
+  });
+
+  const [, forceUpdate] = React.useReducer((x) => x + 1, 0);
+
+  useFrame(({ clock }) => {
+    const t = (clock.getElapsedTime() * 0.4) % 16;
+    if (t < 3) {
+      const p = t / 3;
+      tugRef.current = {
+        pos: [34, 0, 47],
+        rot: Math.PI,
+        fork: Math.min(1, p * 1.2),
+        status: 'Unloading truck',
+        carrying: 'Pallet #102: Nitrile Gloves',
+        isCarrying: true,
+      };
+    } else if (t < 8) {
+      const p = (t - 3) / 5;
+      const z = THREE.MathUtils.lerp(47, 52.5, p);
+      const x = THREE.MathUtils.lerp(34, 32, p);
+      tugRef.current = {
+        pos: [x, 0, z],
+        rot: 0,
+        fork: 0.85,
+        status: 'Carrying to Yard',
+        carrying: 'Pallet #102: Nitrile Gloves',
+        isCarrying: true,
+      };
+    } else if (t < 11) {
+      const p = (t - 8) / 3;
+      tugRef.current = {
+        pos: [32, 0, 52.5],
+        rot: 0,
+        fork: Math.max(0.05, 0.85 - p * 0.8),
+        status: 'Carrying to Yard',
+        carrying: 'Pallet #102: Nitrile Gloves',
+        isCarrying: p < 0.8,
+      };
+    } else {
+      const p = (t - 11) / 5;
+      const z = THREE.MathUtils.lerp(52.5, 47, p);
+      const x = THREE.MathUtils.lerp(32, 34, p);
+      tugRef.current = {
+        pos: [x, 0, z],
+        rot: Math.PI,
+        fork: 0.1,
+        status: 'Loading truck',
+        carrying: 'Empty',
+        isCarrying: false,
+      };
+    }
+  });
+
+  return (
+    <>
+      <ForkliftTugMesh
+        data={{
+          id: 'FL-01',
+          model: 'Toyota 8FBE18',
+          operator: 'Marcus Vance',
+          status: tugRef.current.status,
+          carrying: tugRef.current.carrying,
+          battery: 78,
+          speedKmH: 4.8,
+          position: tugRef.current.pos,
+          rotationY: tugRef.current.rot,
+          forkElevation: tugRef.current.fork,
+          isCarryingCargo: tugRef.current.isCarrying,
+          cargoType: 'pallet',
+        }}
+      />
+      <ForkliftTugMesh
+        data={{
+          id: 'FL-02',
+          model: 'Jungheinrich ETV',
+          operator: 'Automated AGV',
+          status: 'Charging at bay',
+          carrying: 'Empty',
+          battery: 95,
+          speedKmH: 0,
+          position: [60, 0, 45.5],
+          rotationY: Math.PI / 2,
+          forkElevation: 0.05,
+          isCarryingCargo: false,
+          cargoType: 'stretcher',
+        }}
+      />
+    </>
+  );
+}
+
 // Master Active Agents Layer Component
 export function Agents() {
   return (
     <group name="active-agents-layer">
-      {/* Ambulances in motion across the road network */}
+      {/* Smooth Ambulances with Trajectory Guides & Articulated Doors */}
       {simEngine.ambulances.map((amb) => (
-        <AmbulanceMesh key={amb.id} ambulance={amb} />
+        <SmoothAmbulanceMesh key={amb.id} ambulance={amb} />
       ))}
 
-      {/* Supply Logistics Vans delivering medicine crates */}
+      {/* Smooth Supply Freight Vans */}
       {simEngine.supplyVans.map((van) => (
-        <SupplyVanMesh key={van.id} van={van} />
+        <SmoothSupplyVanMesh key={van.id} van={van} />
       ))}
+
+      {/* Medical Logistics Forklift Tugs */}
+      <AutonomousForklifts />
+
+      {/* Highway Passing Traffic */}
+      <HighwayTraffic />
 
       {/* Orderlies with Stretcher Carts */}
       {simEngine.orderlies.map((ord) => (

@@ -17,6 +17,7 @@ import {
 } from '@/sim/invariants';
 
 import { AmbulanceController } from '@/explore/sim/ambulanceController';
+import { trafficManager } from '@/explore/sim/trafficManager';
 
 interface ExploreCharactersProps {
   onGateTrigger: (open: boolean) => void;
@@ -81,6 +82,7 @@ export function ExploreCharacters({ onGateTrigger }: ExploreCharactersProps) {
     }));
     return () => {
       stopExploreInvariantsMonitor();
+      trafficManager.removeVehicle('AMB-01');
     };
   }, []);
 
@@ -113,6 +115,18 @@ export function ExploreCharacters({ onGateTrigger }: ExploreCharactersProps) {
       ambulanceRef.current.rotation.z = 0;
       ambulanceRef.current.rotation.y = ambPose.yaw;
     }
+
+    trafficManager.updateVehicle(
+      'AMB-01',
+      'ambulance',
+      ambPose.x,
+      ambPose.y,
+      ambPose.z,
+      ambPose.yaw,
+      ambPose.speed,
+      5.5,
+      2.3
+    );
 
     // Sync vehicle & pedestrian state for invariants checking & debug overlay
     const amb = vehiclesRef.current[0];
